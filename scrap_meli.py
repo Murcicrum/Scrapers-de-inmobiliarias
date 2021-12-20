@@ -61,18 +61,9 @@ def get_links(url_search:str) -> list:
                           attrs={'class':'ui-search-result__content ui-search-link'} )
 
     urls += [ t['href'] for t in tags ]
-
-
-    next_page_button = soup.find( name='li', 
-                                  attrs={'class':'andes-pagination__button--next'} )
-    if next_page_button:
-        last_page = False
-    else:
-        last_page = True
-
   
 #    print(f'Se extrajeron {len(urls)} links')
-    return urls, last_page
+    return urls
 
 
 
@@ -196,24 +187,27 @@ def save_data(dicts:list, filepath) -> None:
 #####
 #       MAIN
 #####
-
-def scrap(url, filename, ni=0, nf=1000):
+def scrap(url, filename, ni=1, nf=1000):
 
     for n in range(ni,nf):
         print(f'\tPágina {n}')
-        url_page = url + str( n*48+1 )
+        url_page = url + str(n)
 
         print(f'\t\tSacando links')
-        links, last_page = get_links(url_page)
-        print(f'\t\tSacando data')  
-        data = get_data(links)  #TARDA 6' POR PÁGINA!!!
-        print(f'\t\tGuardando data')
-        save_data( data, filename ) 
-        
-        if last_page:
+        links = get_links(url_page)
+
+        if len(links)==0:
             print('Se alcanzó la última página.')
             break
 
+        print(f'\t\tSacando data')  
+        data = get_data(links)  #TARDA 6' POR PÁGINA!!!
+        
+        print(f'\t\tGuardando data')
+        save_data( data, filename )
+
+        
+        
 if __name__=='__main__':
 
     TODAY = time.strftime( "%Y-%m-%d", time.localtime() )
