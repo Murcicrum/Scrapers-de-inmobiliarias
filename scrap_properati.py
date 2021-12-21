@@ -77,43 +77,42 @@ def get_data(urls: list) -> list:
     Dada una lista con urls de publicaciones de properati
     Arma una lista de diccionarios, donde cada uno tiene la misma estructura:
     keys = las keys de to_extract
-    values = el valor que tenga el json de cada publicación en la secuencia de keys definida en los values de to_extract.
-    Si el json de una publicación no contiene una secuencia de keys expresada en un value de to_extract,
+    values = el valor que tenga el json de cada publicacion en la secuencia de keys definida en los values de to_extract.
+    Si el json de una publicacion no contiene una secuencia de keys expresada en un value de to_extract,
     el valor que toma el diccionario es None.
     '''
 
     data_list = []      
-
-#cada key es la key con la que quedará registrada cada valor que querramos extraer del json
+#cada key es la key con la que quedarš¢ registrada cada valor que querramos extraer del json
 #cada value es un string con la secuencia de keys a recorrer en el json para extraer el valor deseado
-    to_extract = {'ub_calle': 'address.street',                                     #
-                  'ub_lat': 'geo_point.lat',                                        #
-                  'ub_lon': 'geo_point.lon',                                        #
-                  'pr_moneda': 'price.currency',                                    #
-                  'pr_valor': 'price.amount',                                       #
-                  'nu_ambs': 'floor_plan.rooms',                                    #
-                  'nu_habs': 'floor_plan.bedrooms',                                 #
-                  'sp_des': 'surface.total',                                        #
-                  'sp_cub': 'surface.covered',                                      #
+    to_extract = {'ub_calle': 'address.street',
+                  'ub_lat': 'geo_point.lat',
+                  'ub_lon': 'geo_point.lon',
+                  'pr_moneda': 'price.currency',
+                  'pr_valor': 'price.amount',
+                  'pr_expen': 'maintenance_fees.price.amount'
+                  'nu_ambs': 'floor_plan.rooms',
+                  'nu_habs': 'floor_plan.bedrooms',
+                  'sp_des': 'surface.total',
+                  'sp_cub': 'surface.covered',
                   'fe_pub': 'published_on'}
     
     for i, url in enumerate(urls):
-#Chequeo si el request sale bien y la publicación está disponible    
+#Chequeo si el request sale bien y la publicaciÃ³n estÃ¡ disponible    
         data = {}
         soup = parse_url( url )
         
         try:
-            data_json = json.loads( soup.find(name='script', attrs={'id':'__NEXT_DATA__'}).string )
-        except:
-            print('fallo', url)
-        d_props = data_json['props']['pageProps']['property']     
+            data_json = json.loads( soup.find(name='script', attrs={'id':'__NEXT_DATA__'}).string )        
+            d_props = data_json['props']['pageProps']['property']     
 
-        for r, s in to_extract.items():
-            data[r] = find_value( s, d_props )
-        data['url']=url
-        
-        
-        data_list.append(data)
+            for r, s in to_extract.items():
+                data[r] = find_value( s, d_props )
+            data['url']=url
+            data_list.append(data)                  
+            
+        except Exception as e:
+            print(e, url)
 
     return data_list
     
