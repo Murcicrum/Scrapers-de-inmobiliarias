@@ -18,20 +18,25 @@ def parse_url( url:str ):
     '''
     Dado un url devuelve objeto parseado de BeautifulSoup
     '''
-    try:
-        response = requests.get( url )
-    except:
-        print('***Error en conexión a', url)
-        return None
-        
-    if response.status_code != 200:
-        print('***Status code',response.status_code,'\tError en request', url)
-        return None
+    n_attempts=5
+    for _ in range(n_attempts):    
+        try:
+            response = requests.get( url )
+            
+            if response.status_code != 200:
+                print('***Error en request. Status code',response.status_code, url)
+                continue
+            
+            return bs( response.content, features="lxml" )
+            
+        except:
+            print('***Error en conexión a', url)
+                    
+    return None
     
-    return bs( response.content, features="lxml" )
+    
 
 
-###DESCARGAR HTML Y VER EL RESULTADO
 def get_links(url_search:str) -> list:
     '''
     Devuelve lista con todos los links a publicaciones de alquileres, dada una
@@ -41,12 +46,17 @@ def get_links(url_search:str) -> list:
     urls = []
 
     soup = parse_url( url_search )
-    if not soup: return
+    if not soup: 
+        return []
     
-    tags = soup.find_all( name='div', attrs={'class':'StyledCardInfo-sc-n9541a-2'} )
+    tags = soup.find_all( name='a', attrs={'target':'_blank'} )
+
     for t in tags:
-        url_pub = URL_PROPERATI + t.find(name='a').attrs['href']
-        urls.append( url_pub )
+        attr_href = t['href']
+        url_pub = URL_PROPERATI + attr_href
+        
+        if attr_href.startswith('/detalle') and url_pub not in urls:
+            urls.append( url_pub )
 
 
     return urls
@@ -90,7 +100,7 @@ def get_data(urls: list) -> list:
                   'ub_lon': 'geo_point.lon',
                   'pr_moneda': 'price.currency',
                   'pr_valor': 'price.amount',
-                  'pr_expen': 'maintenance_fees.price.amount'
+                  'pr_expen': 'maintenance_fees.price.amount',
                   'nu_ambs': 'floor_plan.rooms',
                   'nu_habs': 'floor_plan.bedrooms',
                   'sp_des': 'surface.total',
@@ -109,10 +119,13 @@ def get_data(urls: list) -> list:
             for r, s in to_extract.items():
                 data[r] = find_value( s, d_props )
             data['url']=url
+            
+            print(i, data)
+            
             data_list.append(data)                  
             
         except Exception as e:
-            print(e, url)
+            print('Exception: ',i, e, url)
 
     return data_list
     
@@ -167,22 +180,22 @@ def scrap(url, filename, ni=1, nf=1000):
 
 if __name__=='__main__':
 
-    TODAY = time.strftime( "%Y-%m-%d", time.localtime() )
     DIRECTORY = sys.argv[1]
 
     URL_SEARCH_PHS  = 'https://www.properati.com.ar/s/capital-federal/ph/alquiler?page='
     URL_SEARCH_CASAS = 'https://www.properati.com.ar/s/capital-federal/casa/alquiler?sort=published_on_desc&page='
     URL_SEARCH_DEPTOS = 'https://www.properati.com.ar/s/capital-federal/departamento/alquiler?sort=published_on_desc&page='
-    
+
    
-    search = {'phs': URL_SEARCH_PHS,
+    SEARCH = {'phs': URL_SEARCH_PHS,
               'casas': URL_SEARCH_CASAS,
               'deptos': URL_SEARCH_DEPTOS }
 
+    for tipo, url in SEARCH.items():
+        TODAY = time.strftime( "%Y-%m-%d-%H:%M", time.localtime() )
+        FILEPATH = DIRECTORY + '_'.join([TODAY,tipo,'properati.csv'])
 
-    for tipo, url in search.items():
-        filepath = DIRECTORY + '_'.join([TODAY,tipo,'properati.csv'])
-        print(f'Escrapeando {tipo}.\nLos datos se guardarán en {filepath}')
-        scrap(url, filepath)
+        print(f'Escrapeando {tipo}.\nLos datos se guardarán en {FILEPATH}')
+        scrap(url, FILEPATH)
         
     print('Todo OK :)')
