@@ -192,7 +192,7 @@ if __name__=='__main__':
               'deptos': URL_SEARCH_DEPTOS }
 
     for tipo, url in SEARCH.items():
-        TODAY = time.strftime( "%Y-%m-%d-%H:%M", time.localtime() )
+        TODAY = time.strftime( "%Y-%m-%d", time.localtime() )
         FILEPATH = DIRECTORY + '_'.join([TODAY,tipo,'properati.csv'])
 
         print(f'Escrapeando {tipo}.\nLos datos se guardarán en {FILEPATH}')
