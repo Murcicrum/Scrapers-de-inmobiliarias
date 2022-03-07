@@ -1,4 +1,5 @@
 #!/bin/bash
+#
 
 LOG_FILE=where/is/log_file.txt
 DATE=$(date +%Y-%m-$d-%H:%M)
