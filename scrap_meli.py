@@ -79,6 +79,7 @@ def get_data(urls:list) -> list:
             
         if response.status_code != 200:
             print('***Request malio sal', response.status_code, url)
+            continue
         pub_json = response.json() 
 
         to_extract = {'sp_tot':     'attributes.Superficie total', 
@@ -182,7 +183,7 @@ def scrap(url, filename, ni=0, nf=1000):
             break
 
         print(f'\t\tSacando data')  
-        data = get_data(links)  #TARDA 6' POR PÁGINA!!!
+        data = get_data(links)  
         
         print(f'\t\tGuardando data')
         save_data( data, filename )
@@ -204,7 +205,7 @@ if __name__=='__main__':
 
     for tipo, url in SEARCH.items():
         TODAY = time.strftime( "%Y-%m-%d", time.localtime() )
-        FILEPATH = DIRECTORY + '_'.join([TODAY,'meli',tipo])+'.csv'
+        FILEPATH = DIRECTORY + '_'.join([TODAY,'meli',tipo]) + '.csv'
         
         print(f'Escrapeando {tipo}.\tLos datos se guardarán en {FILEPATH}')
         scrap(url, FILEPATH)

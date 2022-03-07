@@ -118,7 +118,7 @@ def get_data(urls: list) -> list:
 
             for r, s in to_extract.items():
                 data[r] = find_value( s, d_props )
-            data['url']=url
+!            data['url']=url
             
             print(i, data)
             
@@ -193,7 +193,7 @@ if __name__=='__main__':
 
     for tipo, url in SEARCH.items():
         TODAY = time.strftime( "%Y-%m-%d", time.localtime() )
-        FILEPATH = DIRECTORY + '_'.join([TODAY,'properati',tipo])+'.csv'
+        FILEPATH = DIRECTORY + '_'.join([TODAY,'properati',tipo]) + '.csv'
 
         print(f'Escrapeando {tipo}.\nLos datos se guardarán en {FILEPATH}')
         scrap(url, FILEPATH)
