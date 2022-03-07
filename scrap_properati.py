@@ -193,7 +193,7 @@ if __name__=='__main__':
 
     for tipo, url in SEARCH.items():
         TODAY = time.strftime( "%Y-%m-%d", time.localtime() )
-        FILEPATH = DIRECTORY + '_'.join([TODAY,tipo,'properati.csv'])
+        FILEPATH = DIRECTORY + '_'.join([TODAY,'properati',tipo])+'.csv'
 
         print(f'Escrapeando {tipo}.\nLos datos se guardarán en {FILEPATH}')
         scrap(url, FILEPATH)
