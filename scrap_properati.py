@@ -102,8 +102,8 @@ def get_data(urls: list) -> list:
                   'pr_valor': 'price.amount',
                   'pr_expen': 'maintenance_fees.price.amount',
                   'nu_ambs': 'floor_plan.rooms',
-                  'nu_habs': 'floor_plan.bedrooms',
-                  'sp_des': 'surface.total',
+                  'nu_dorms': 'floor_plan.bedrooms',
+                  'sp_tot': 'surface.total',
                   'sp_cub': 'surface.covered',
                   'fe_pub': 'published_on'}
     

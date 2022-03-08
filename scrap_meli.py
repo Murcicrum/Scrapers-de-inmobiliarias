@@ -86,7 +86,7 @@ def get_data(urls:list) -> list:
                       'sp_cub':     'attributes.Superficie cubierta', 
                       'nu_ambs':    'attributes.Ambientes', 
                       'nu_dorms':   'attributes.Dormitorios', 
-                      'pr_exp':     'attributes.Expensas',
+                      'pr_expen':   'attributes.Expensas',
                       'pr_valor':   'price',
                       'pr_moneda':  'currency_id',
                       'fe_pub':     'start_time',
