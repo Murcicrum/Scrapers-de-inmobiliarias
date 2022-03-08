@@ -118,7 +118,7 @@ def get_data(urls: list) -> list:
 
             for r, s in to_extract.items():
                 data[r] = find_value( s, d_props )
-!            data['url']=url
+            data['url']=url
             
             print(i, data)
             
