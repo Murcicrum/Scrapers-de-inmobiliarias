@@ -191,11 +191,12 @@ if __name__=='__main__':
               'casas': URL_SEARCH_CASAS,
               'deptos': URL_SEARCH_DEPTOS }
 
+    TODAY = time.strftime( "%Y-%m-%d", time.localtime() )
     for tipo, url in SEARCH.items():
-        TODAY = time.strftime( "%Y-%m-%d", time.localtime() )
-        FILEPATH = DIRECTORY + '_'.join([TODAY,'properati',tipo]) + '.csv'
+        
+        filename = DIRECTORY + '_'.join([TODAY,'properati',tipo]) + '.csv'
 
-        print(f'Escrapeando {tipo}.\nLos datos se guardarán en {FILEPATH}')
-        scrap(url, FILEPATH)
+        print(f'Escrapeando {tipo}.\nLos datos se guardarán en {filename}')
+        scrap(url, filename)
         
     print('Todo OK :)')
